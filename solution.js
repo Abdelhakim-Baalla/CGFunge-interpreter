@@ -1,92 +1,46 @@
 const N = parseInt(readline());
-const grid = [];
-for (let i = 0; i < N; i++) {
-    grid.push(readline());
-}
+const grid = Array.from({length: N}, () => readline());
+let x = 0, y = 0, dx = 1, dy = 0, strMode = false, out = "";
+const stack = [];
 
-let x = 0, y = 0;
-let dx = 1, dy = 0;
-let stack = [];
-let stringMode = false;
-let output = '';
+// دالة سحب آمنة ترجع 0 إذا كان المكدس فارغاً
+const pop = () => stack.pop() || 0;
+
+// جدول توجيه الحركة
+const dirs = { '>': [1, 0], '<': [-1, 0], '^': [0, -1], 'v': [0, 1] };
+
+// قاموس العمليات
+const ops = {
+    '+': () => { const a=pop(), b=pop(); stack.push(b+a); },
+    '-': () => { const a=pop(), b=pop(); stack.push(b-a); },
+    '*': () => { const a=pop(), b=pop(); stack.push(b*a); },
+    'P': pop,
+    'X': () => { const a=pop(), b=pop(); stack.push(a, b); },
+    'D': () => { const a=pop(); stack.push(a, a); },
+    '_': () => { const a=pop(); [dx, dy] = a === 0 ? dirs['>'] : dirs['<']; },
+    '|': () => { const a=pop(); [dx, dy] = a === 0 ? dirs['v'] : dirs['^']; },
+    'I': () => out += pop(),
+    'C': () => out += String.fromCharCode(pop()),
+    'S': () => { x += dx; y += dy; },
+    'E': () => { console.log(out); process.exit(0); }
+};
 
 while (true) {
-    const ch = grid[y][x];
-
+    // قراءة الحرف مع معالجة الحدود الخارجة عن الشبكة (Short Lines)
+    const ch = grid[y]?.[x] || ' '; 
+    
     if (ch === '"') {
-        stringMode = !stringMode;
-    } else if (stringMode) {
+        strMode = !strMode;
+    } else if (strMode) {
         stack.push(ch.charCodeAt(0));
-    } else {
-        let a, b;
-        switch (ch) {
-            case '>': dx = 1; dy = 0; break;
-            case '<': dx = -1; dy = 0; break;
-            case '^': dx = 0; dy = -1; break;
-            case 'v': dx = 0; dy = 1; break;
-            case 'S': x += dx; y += dy; break;
-            case 'E':
-                console.log(output);
-                process.exit(0);
-
-            case '_':
-                a = stack.pop();
-                if (a === 0) { dx = 1; dy = 0; }
-                else { dx = -1; dy = 0; }
-                break;
-            case '|':
-                a = stack.pop();
-                if (a === 0) { dx = 0; dy = 1; }
-                else { dx = 0; dy = -1; }
-                break;
-
-            case '+':
-                a = stack.pop();
-                b = stack.pop();
-                stack.push(b + a);
-                break;
-            case '-':
-                a = stack.pop();
-                b = stack.pop();
-                stack.push(b - a);
-                break;
-            case '*':
-                a = stack.pop();
-                b = stack.pop();
-                stack.push(b * a);
-                break;
-
-                
-            case 'P':
-                stack.pop();
-                break;
-            case 'X':
-                a = stack.pop();
-                b = stack.pop();
-                stack.push(a);
-                stack.push(b);
-                break;
-            case 'D':
-                a = stack.pop();
-                stack.push(a);
-                stack.push(a);
-                break;
-
-            case 'I':
-                output += stack.pop().toString();
-                break;
-            case 'C':
-                output += String.fromCharCode(stack.pop());
-                break;
-
-            default:
-                if (ch >= '0' && ch <= '9') {
-                    stack.push(Number(ch));
-                }
-                break;
-        }
+    } else if (ch >= '0' && ch <= '9') {
+        stack.push(+ch);
+    } else if (dirs[ch]) {
+        [dx, dy] = dirs[ch];
+    } else if (ops[ch]) {
+        ops[ch]();
     }
-
+    
     x += dx;
     y += dy;
 }

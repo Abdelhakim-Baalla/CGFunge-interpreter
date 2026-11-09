@@ -30,8 +30,9 @@ JavaScript solution, built step by step.
 
 ## Status
 - [x] grid + instruction pointer + directions + S
-- [ ] arithmetic + - *
+- [x] arithmetic + - *   (note: `/` is NOT a command in this puzzle)
 - [ ] P X D
 - [ ] " string mode
-- [ ] _ | flow control
-- [ ] I C output
+- [x] _ | flow control
+- [ ] I C output   (`C` is uppercase — `c` is a bug)
+- tests: 5 / 10 passing (01, 02, 07, 09, 10)

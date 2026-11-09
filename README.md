@@ -4,7 +4,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Code Size](https://img.shields.io/badge/code%20size-1.5%20KB-blue)](./solution.js)
 
-A compact, dependency-free **CGFunge** interpreter written in JavaScript.
+A compact, dependency-free **CGFunge** interpreter with two reference
+implementations: **JavaScript** ([`solution.js`](./solution.js)) and
+**Python 3** ([`solution.py`](./solution.py)).
 
 ---
 
@@ -146,19 +148,34 @@ costs a single short-circuit per tick.
 
 ## Execution
 
-Requires **Node.js 14+** (optional chaining and logical assignment). No dependencies,
-no install step.
+The JavaScript build requires **Node.js 14+** (optional chaining). The Python build
+requires **Python 3.8+**. Neither has dependencies and neither needs an install step.
 
-### Run a program from a file
+### JavaScript
 
 ```bash
 node solution.js < program.txt
+```
+
+### Python
+
+```bash
+python3 solution.py < program.txt
 ```
 
 ### Run a program from stdin (heredoc)
 
 ```bash
 node solution.js <<'EOF'
+1
+2419+*+IE
+EOF
+```
+
+or
+
+```bash
+python3 solution.py <<'EOF'
 1
 2419+*+IE
 EOF
@@ -173,10 +190,11 @@ Output:
 ### Run the full local test-suite
 
 ```bash
-./run_tests.sh
+./run_tests.sh        # JavaScript
+./run_tests_py.sh     # Python
 ```
 
-The suite executes 14 programs (arithmetic, stack ops, string mode, flow control,
+Each suite executes 14 programs (arithmetic, stack ops, string mode, flow control,
 ragged grids, edge cases) and prints `PASS` / `FAIL` per case.
 
 ### Debugging helper

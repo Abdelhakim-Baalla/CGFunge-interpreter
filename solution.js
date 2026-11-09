@@ -3,13 +3,10 @@ const grid = Array.from({length: N}, () => readline());
 let x = 0, y = 0, dx = 1, dy = 0, strMode = false, out = "";
 const stack = [];
 
-// دالة سحب آمنة ترجع 0 إذا كان المكدس فارغاً
 const pop = () => stack.pop() || 0;
 
-// جدول توجيه الحركة
 const dirs = { '>': [1, 0], '<': [-1, 0], '^': [0, -1], 'v': [0, 1] };
 
-// قاموس العمليات
 const ops = {
     '+': () => { const a=pop(), b=pop(); stack.push(b+a); },
     '-': () => { const a=pop(), b=pop(); stack.push(b-a); },
@@ -26,9 +23,8 @@ const ops = {
 };
 
 while (true) {
-    // قراءة الحرف مع معالجة الحدود الخارجة عن الشبكة (Short Lines)
-    const ch = grid[y]?.[x] || ' '; 
-    
+    const ch = grid[y]?.[x] || ' ';
+
     if (ch === '"') {
         strMode = !strMode;
     } else if (strMode) {
@@ -40,7 +36,7 @@ while (true) {
     } else if (ops[ch]) {
         ops[ch]();
     }
-    
+
     x += dx;
     y += dy;
 }
